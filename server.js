@@ -23,7 +23,7 @@ app.use(methodOverride('_method'));
 
 //Routes
 app.get('/', (req, res) => {
-    res.send('Working');
+    res.redirect('/logs');
 })
 
 /**
@@ -130,6 +130,22 @@ app.put('/api/logs/:id', async (req, res) => {
         console.log(error);
     }
 })
+
+/**
+ * Add Comments
+ * updates a specific log with comments
+ */
+app.put('/api/logs/add-comments/:id', async (req, res) => {
+    const {id} = req.params;
+    try{
+        const logToUpdate = await Logs.findById(id);
+        logToUpdate.comments.push(req.body);
+        await Logs.findByIdAndUpdate(id, logToUpdate, {new: true});
+        res.redirect(`/logs/${id}`)
+    }catch(e){
+        console.log(error);
+    }
+});
 
 //Seed Route
 app.get('/api/logs/seed', async (req, res) => {
