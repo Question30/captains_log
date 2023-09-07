@@ -3,6 +3,8 @@ const express = require('express');
 const jsxEngine = require('jsx-view-engine');
 const mongoose = require('mongoose');
 require('dotenv').config();
+const logs = require('./models/logs');
+const manyLogs = require('./models/manyLogs')
 
 
 //variables
@@ -28,6 +30,12 @@ app.get('/new', (req, res) => {
 
 app.post('/logs', (req, res) => {
     res.send(req.body);
+})
+
+//Seed Route
+app.get('/api/logs/seed', async (req, res) => {
+    const createdLogs = await logs.insertMany(manyLogs);
+    res.send(createdLogs);
 })
 
 //Connecting to Database
