@@ -110,6 +110,27 @@ app.delete('/api/logs/:id', async (req, res) => {
     }
 })
 
+/**
+ * Update
+ * updates a specified entry by id
+ */
+app.put('/api/logs/:id', async (req, res) => {
+    if(req.body.shipIsBroken === 'on'){
+        req.body.shipIsBroken = true;
+      }else{
+        req.body.shipIsBroken = false;
+      }
+
+      const {id} = req.params;
+
+    try {
+        await Logs.findByIdAndUpdate(id, req.body, { new : true});
+        res.redirect(`/logs/${id}`);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 //Seed Route
 app.get('/api/logs/seed', async (req, res) => {
     const createdLogs = await Logs.insertMany(manyLogs);
