@@ -64,6 +64,20 @@ app.get('/logs/:id', async (req, res) =>{
 })
 
 /**
+ * Edit route
+ * Displays form to edit entry
+ */
+app.get('/logs/:id/edit', async (req, res) => {
+    const {id} = req.params;
+    try {
+        const log = await Logs.findById(id);
+        res.render('Edit', {log});
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+/**
  * Post route
  * Sends data from the form to the database
  */
