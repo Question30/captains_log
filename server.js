@@ -3,7 +3,7 @@ const express = require('express');
 const jsxEngine = require('jsx-view-engine');
 const mongoose = require('mongoose');
 require('dotenv').config();
-const logs = require('./models/logs');
+const Logs = require('./models/logs');
 const manyLogs = require('./models/manyLogs')
 
 
@@ -24,17 +24,40 @@ app.get('/', (req, res) => {
     res.send('Working');
 })
 
-app.get('/new', (req, res) => {
+/**
+ * index route
+ * Displays all logs from the database
+ */
+app.get('/logs', async (req, res)=> {
+    try{
+        const logs = await Logs.find({});
+        res.render('Index', {logs});
+    }catch(e){
+        console.log(e);
+    }
+    
+})
+
+/**
+ * New Route
+ * Returns a page with a form
+ */
+app.get('/logs/new', (req, res) => {
     res.render('New')
 });
 
+
+/**
+ * Post route
+ * Sends data from the form to the database
+ */
 app.post('/logs', (req, res) => {
     res.send(req.body);
 })
 
 //Seed Route
 app.get('/api/logs/seed', async (req, res) => {
-    const createdLogs = await logs.insertMany(manyLogs);
+    const createdLogs = await Logs.insertMany(manyLogs);
     res.send(createdLogs);
 })
 
