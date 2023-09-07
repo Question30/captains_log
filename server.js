@@ -11,6 +11,10 @@ const PORT = 3000;
 app.set('view engine', 'jsx');
 app.engine('jsx', jsxEngine());
 
+//Middlewares
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
+
 //Routes
 app.get('/', (req, res) => {
     res.send('Working');
@@ -18,6 +22,10 @@ app.get('/', (req, res) => {
 
 app.get('/new', (req, res) => {
     res.render('New')
+});
+
+app.post('/logs', (req, res) => {
+    res.send(req.body);
 })
 
 app.listen(PORT, () => {
