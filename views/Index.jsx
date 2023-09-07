@@ -10,7 +10,7 @@ function Index({logs}){
                     logs.map(log => {
                         return(
                             <li key={log._id}>
-                                {log.title}
+                               <a href={`/logs/${log._id}`}>{log.title}</a> 
                             </li>
                         )
                     })

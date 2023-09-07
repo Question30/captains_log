@@ -48,6 +48,20 @@ app.get('/logs/new', (req, res) => {
 
 
 /**
+ * Show Route
+ * get log by id and render
+ */
+app.get('/logs/:id', async (req, res) =>{
+    const {id} = req.params;
+    try {
+        const log = await Logs.findById(id);
+        res.render('Show', {log})
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+/**
  * Post route
  * Sends data from the form to the database
  */
