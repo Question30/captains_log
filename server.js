@@ -4,7 +4,8 @@ const jsxEngine = require('jsx-view-engine');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const Logs = require('./models/logs');
-const manyLogs = require('./models/manyLogs')
+const manyLogs = require('./models/manyLogs');
+const methodOverride = require('method-override');
 
 
 //variables
@@ -18,6 +19,7 @@ app.engine('jsx', jsxEngine());
 //Middlewares
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
+app.use(methodOverride('_method'));
 
 //Routes
 app.get('/', (req, res) => {
@@ -65,8 +67,33 @@ app.get('/logs/:id', async (req, res) =>{
  * Post route
  * Sends data from the form to the database
  */
-app.post('/logs', (req, res) => {
-    res.send(req.body);
+app.post('/logs', async (req, res) => {
+    if(req.body.shipIsBroken === 'on'){
+        req.body.shipIsBroken = true;
+      }else{
+        req.body.shipIsBroken = false;
+      }
+
+    try {
+        await Logs.create(req.body);
+        res.redirect('/logs')
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+/**
+ * Delete route
+ * Finds log by id and deletes it
+ */
+app.delete('/api/logs/:id', async (req, res) => {
+    const {id} = req.params;
+    try {
+        await Logs.findByIdAndDelete(id);
+        res.redirect('/logs');
+    } catch (error) {
+        console.log(error);
+    }
 })
 
 //Seed Route
